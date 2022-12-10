@@ -1,51 +1,73 @@
 package org.example.game;
 
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
+import lombok.Setter;
+import org.example.game.Schedule.ScheduleType;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-@Builder
-public class Task {
 
-    public enum TaskState {
-        SCHEDULED,
+/**
+ * TODO There are some tasks e.g. Ruslan laundry, that cannot be scheduled in advance and are rather
+ * on demand tasks. These could either be "assigned" to someone or have its own category. These type of tasks
+ * help balance KARMA e.g. if Andres has negative karma relative to Alex, and if ruslan laundry is "called-out", then
+ * Andres will be "signaled" to pick up that task first.
+ */
+@Builder
+public class Mission {
+
+    public enum MissionState {
+        CREATED,
         STARTED,
-        PAUSED,
-        COMPLETED,
-        CANCELLED,
-        NONE
+        DONE
     }
 
     String name;
-
-    Life cost;
-
-    @Builder.Default @Getter List<TaskEvent> recentHistory = new ArrayList<>(); // we should only care about the last 100 or so
+    Life reward;
 
     Schedule schedule;
 
-    private TaskState state;
+    LocalDate scheduledAt;
+    LocalDate dueAt;
+    LocalDate completedAt;
 
-    public boolean start(Citizen citizen) {
-        return changeState(TaskState.STARTED, "started by " + citizen.getName());
-    }
+    MissionTemplate template;
 
-    public boolean complete(Citizen citizen) {
-       return changeState(TaskState.COMPLETED, "completed by " + citizen.getName());
-    }
+    // List of citizens that should complete this mission (not enforced).
+    // This is important at assignment, when the world determines who
+    // it can assign this mission to.
+    List<Citizen> authorizedCrew;
 
-    public boolean changeState(TaskState newState, String description) {
-        // TODO check state transitions! return false when there is an invalid state transition
-        state = newState;
+    Citizen owner;
 
-        recentHistory.add(TaskEvent.builder()
-                .description(description)
-                .timestamp(new Date())
-                .build());
+    @Default
+    @Setter
+    @Getter
+    private MissionState state = MissionState.CREATED;
 
+    public boolean complete() {
+        state = MissionState.DONE;
+        completedAt = LocalDate.now();
         return true;
+    }
+
+    public boolean assignTo(Citizen citizen) {
+        owner = citizen;
+        if (!citizen.alreadyAssigned(this)) citizen.assignMission(this);
+        return true;
+    }
+
+    public long daysLeft() {
+        var now = java.time.LocalDate.now();
+        return now.until(scheduledAt, ChronoUnit.DAYS);
+    }
+
+    public boolean isOverdue() {
+        return !state.equals(MissionState.DONE) && LocalDate.now().isAfter(dueAt);
     }
 }

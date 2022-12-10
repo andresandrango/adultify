@@ -1,2 +1,4 @@
-package org.example;public class Karma {
+package org.example.game;
+
+public class Karma {
 }

@@ -2,6 +2,7 @@ package org.example.game;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,12 +13,12 @@ import java.util.List;
  * enough to self-heal e.i. the world will reward good citizens with say 1.5x good karma multiplier or extra
  * time to complete missions, etc.
  */
-@Builder
+@SuperBuilder
 public class World {
 
     @Getter String name;
 
-    List<Citizen> citizens;
+    @Getter List<Citizen> citizens;
 
     List<Mission> missionsCompleted;
     List<Mission> nextMissions;

@@ -1,7 +1,7 @@
 package org.example.game.data;
 
-import org.example.game.Citizen;
-import org.example.game.World;
+import org.example.game.data.entities.Citizen;
+import org.example.game.data.entities.World;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,6 +11,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorldAdapter {
+
+    public World getWorld(String wUuid) {
+        Database db = new Database();
+
+        World w = null;
+
+        try {
+            Connection conn = db.init();
+
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM world where id = '" + wUuid + "'");
+            while (rs.next()) {
+                System.out.print("Column 1 returned ");
+                w = deserialize(rs);
+                System.out.println(rs.getString(1));
+            }
+            rs.close();
+            st.close();
+
+        } catch (SQLException ex) {
+            System.out.println("issues with conn" + ex);
+        }
+
+        return w;
+    }
 
     public List<World> getWorlds() {
         Database db = new Database();
@@ -24,6 +49,7 @@ public class WorldAdapter {
             ResultSet rs = st.executeQuery("SELECT * FROM world");
             while (rs.next()) {
                 System.out.print("Column 1 returned ");
+
                 worlds.add(deserialize(rs));
                 System.out.println(rs.getString(1));
             }
@@ -69,12 +95,14 @@ public class WorldAdapter {
 
     public Citizen deserializeCitizen(ResultSet rs) throws SQLException {
         return Citizen.builder()
+                .id(rs.getString("id"))
                 .name(rs.getString("name"))
                 .build();
     }
 
     public World deserialize(ResultSet rs) throws SQLException {
         return World.builder()
+                .id(rs.getString("id"))
                 .name(rs.getString("name"))
                 .citizens(getWorldCitizens(rs.getString("id")))
                 .build();

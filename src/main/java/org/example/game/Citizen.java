@@ -3,6 +3,7 @@ package org.example.game;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * The motivations to be a good citizen is to:
  *      - complete missions on a timely fashion
  */
-@Builder
+@SuperBuilder
 public class Citizen {
 
     @Getter String name;

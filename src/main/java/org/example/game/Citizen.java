@@ -52,4 +52,9 @@ public class Citizen {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "\nCitizen " + name + "\n\t" + life;
+    }
 }

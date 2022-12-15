@@ -3,6 +3,7 @@ package org.example.game;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +26,11 @@ public class World {
 
     public List<Mission> findLatestSuccessfulCompletedMission(String missionName, int n) {
         return List.of();
+    }
+
+    @Override
+    public String toString() {
+        return name + "\n citizens:" + Arrays.toString(citizens.toArray());
     }
 
     public boolean assignMission(Mission mission) {

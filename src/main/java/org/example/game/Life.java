@@ -37,4 +37,9 @@ public class Life {
         if (energy == life.energy || time == life.time) return 0;
         return -1;
     }
+
+    @Override
+    public String toString() {
+        return "Life: energy=" + energy + ", time=" + time;
+    }
 }

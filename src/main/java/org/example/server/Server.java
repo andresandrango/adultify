@@ -21,6 +21,10 @@ public class Server {
             ctx.json(worldAdapter.getWorld(ctx.pathParam("id")));
         });
 
+        app.post("/worlds/create", ctx -> {
+            ctx.json(worldAdapter.addWorld(ctx.formParam("name")));
+        });
+
         app.start(7070);
     }
 }

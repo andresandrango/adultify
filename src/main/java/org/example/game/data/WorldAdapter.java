@@ -36,7 +36,7 @@ public class WorldAdapter {
     }
 
     public boolean removeCitizen(String wId, String cId) {
-        return Utils.executeUpdateNoKeys(String.format(" DELETE FROM world_citizen WHERE world='%s' and citizen='%s'", wId, cId));
+        return Utils.executeUpdateNoKeys(String.format("DELETE FROM world_citizen WHERE world='%s' and citizen='%s'", wId, cId));
     }
 
     public List<World> getWorlds() {

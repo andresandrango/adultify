@@ -23,6 +23,14 @@ public class Server {
             ctx.json(worldAdapter.getWorld(ctx.pathParam("id")));
         });
 
+        app.delete("/worlds/{id}", ctx -> {
+           if (worldAdapter.removeWorld(ctx.pathParam("id"))) {
+               ctx.status(200);
+           } else {
+               ctx.status(400);
+           }
+        });
+
         app.post("/worlds/create", ctx -> {
             ctx.json(worldAdapter.createWorld(ctx.formParam("name")));
         });
@@ -38,6 +46,14 @@ public class Server {
 
         app.post("/citizens/create", ctx -> {
             ctx.json(citizenAdapter.createCitizen(ctx.formParam("name")));
+        });
+
+        app.delete("/citizens/{id}", ctx -> {
+            if (citizenAdapter.deleteCitizen(ctx.pathParam("id"))) {
+                ctx.status(200);
+            } else {
+                ctx.status(400);
+            }
         });
 
         app.post("/worlds/{wId}/add-citizen/{cId}", ctx -> {

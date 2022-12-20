@@ -31,6 +31,10 @@ public class WorldAdapter {
         }
     }
 
+    public boolean removeWorld(String wId) {
+        return Utils.executeUpdateNoKeys(String.format("DELETE FROM world where id = '%s'", wId));
+    }
+
     public boolean addCitizen(String wId, String cId) {
         return Utils.executeUpdateNoKeys(String.format("INSERT INTO world_citizen (world,citizen) values ('%s','%s')", wId, cId));
     }

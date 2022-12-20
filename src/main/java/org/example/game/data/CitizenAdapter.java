@@ -40,4 +40,9 @@ public class CitizenAdapter {
             return null;
         }
     }
+
+    // TODO should remove from world_citizen table as well
+    public boolean deleteCitizen(String id) {
+        return Utils.executeUpdateNoKeys(String.format("DELETE FROM citizen WHERE id = '%s'", id));
+    }
 }

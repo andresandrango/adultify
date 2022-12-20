@@ -35,6 +35,22 @@ public class Server {
             ctx.json(worldAdapter.createWorld(ctx.formParam("name")));
         });
 
+        app.post("/worlds/{wId}/add-citizen/{cId}", ctx -> {
+            if (worldAdapter.addCitizen(ctx.pathParam("wId"), ctx.pathParam("cId"))) {
+                ctx.json(worldAdapter.getWorld(ctx.pathParam("wId")));
+            } else {
+                ctx.status(400);
+            }
+        });
+
+        app.post("/worlds/{wId}/remove-citizen/{cId}", ctx -> {
+            if (worldAdapter.removeCitizen(ctx.pathParam("wId"), ctx.pathParam("cId"))) {
+                ctx.json(worldAdapter.getWorld(ctx.pathParam("wId")));
+            } else {
+                ctx.status(400);
+            }
+        });
+
         app.get("/citizens", ctx -> {
             var citizens = citizenAdapter.getCitizens();
             ctx.json(citizens);
@@ -51,22 +67,6 @@ public class Server {
         app.delete("/citizens/{id}", ctx -> {
             if (citizenAdapter.deleteCitizen(ctx.pathParam("id"))) {
                 ctx.status(200);
-            } else {
-                ctx.status(400);
-            }
-        });
-
-        app.post("/worlds/{wId}/add-citizen/{cId}", ctx -> {
-           if (worldAdapter.addCitizen(ctx.pathParam("wId"), ctx.pathParam("cId"))) {
-               ctx.json(worldAdapter.getWorld(ctx.pathParam("wId")));
-           } else {
-               ctx.status(400);
-           }
-        });
-
-        app.post("/worlds/{wId}/remove-citizen/{cId}", ctx -> {
-            if (worldAdapter.removeCitizen(ctx.pathParam("wId"), ctx.pathParam("cId"))) {
-                ctx.json(worldAdapter.getWorld(ctx.pathParam("wId")));
             } else {
                 ctx.status(400);
             }

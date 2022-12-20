@@ -1,6 +1,5 @@
 package org.example.game;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -56,7 +55,7 @@ public class World {
 
         mission.complete();
         try {
-            citizen.awardMission(mission, rewardMultiplier);
+            citizen.completeMission(mission, rewardMultiplier);
         } catch (Exception ex) {
             // TODO handle exception
         }

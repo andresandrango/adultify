@@ -4,11 +4,9 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.game.Schedule.ScheduleType;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,7 +37,7 @@ public class Mission {
     MissionTemplate template;
 
     // List of citizens that should complete this mission (not enforced).
-    // This is important at assignment, when the world determines who
+    // This is important at assignment, when the `World` determines who
     // it can assign this mission to.
     List<Citizen> authorizedCrew;
 
@@ -50,9 +48,32 @@ public class Mission {
     @Getter
     private MissionState state = MissionState.CREATED;
 
+   public static class MissionBuilder {
+       public MissionBuilder owner(Citizen owner) throws Exception {
+           throw new Exception("use assignTo instead");
+       }
+   }
+
+   public void markComplete() {
+       if (state == MissionState.DONE) return;
+
+       state = MissionState.DONE;
+       completedAt = LocalDate.now();
+   }
+
     public boolean complete() {
-        state = MissionState.DONE;
-        completedAt = LocalDate.now();
+       if (state == MissionState.DONE) return true;
+
+       if (owner != null) {
+            try {
+                owner.completeMission(this, 1);
+            } catch (Exception ex) {
+                System.out.printf("could not award mission %s to owner %s%n", this, owner);
+                return false;
+            }
+       }
+
+        markComplete();
         return true;
     }
 

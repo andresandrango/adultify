@@ -1,6 +1,6 @@
 package org.example.game.data;
 
-import org.example.game.World;
+import org.example.game.data.entities.World;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -27,8 +27,8 @@ public class Life {
 
     public Life cloneWithMultiplier(float multiplier) {
         return Life.builder()
-                .energy((int) Math.max(1, Math.round((float) energy) * multiplier))
-                .time((int) Math.max(1, Math.round((float) time) * multiplier))
+                .energy((int) Math.max(0, Math.round((float) energy) * multiplier))
+                .time((int) Math.max(0, Math.round((float) time) * multiplier))
                 .build();
     }
 

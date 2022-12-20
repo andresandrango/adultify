@@ -1,6 +1,5 @@
 package org.example.game;
 
-import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -27,9 +26,15 @@ public class Citizen {
     // Active missions; scheduled and in progress
     @Default List<Mission> missions = new ArrayList<>();
 
-    public void awardMission(Mission mission, float rewardMultiplier) throws Exception {
-        Life calcReward = mission.reward.cloneWithMultiplier(rewardMultiplier);
+    public void completeMission(Mission mission) throws Exception {
+        completeMission(mission, 1);
+    }
+
+    public void completeMission(Mission mission, float rewardMultiplier) throws Exception {
         if (missions.remove(mission)) {
+            mission.markComplete();
+
+            Life calcReward = mission.reward.cloneWithMultiplier(rewardMultiplier);
             life.addLife(calcReward);
             // Remove the actual reward added as part of stats
             // TODO just recalc from 'missions' array.

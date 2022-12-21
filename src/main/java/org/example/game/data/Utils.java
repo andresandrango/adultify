@@ -1,7 +1,12 @@
 package org.example.game.data;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.game.Mission.MissionState;
 import org.example.game.data.entities.Citizen;
+import org.example.game.data.entities.Life;
+import org.example.game.data.entities.Mission;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +18,8 @@ import java.util.function.Function;
 
 // TODO refactor this with a client that is injected in the constructor
 public class Utils {
+
+    private final static ObjectMapper objectMapper = new ObjectMapper();
     public static String executeUpdate(String query) {
         Database db = new Database();
 
@@ -116,6 +123,15 @@ public class Utils {
         return Citizen.builder()
                 .id(rs.getString("id"))
                 .name(rs.getString("name"))
+                .build();
+    }
+
+    public static Mission deserializeMission(ResultSet rs) throws SQLException, IOException {
+        return Mission.builder()
+                .id(rs.getString("id"))
+                .name(rs.getString("name"))
+                .state(MissionState.valueOf(rs.getString("state")))
+                .reward(objectMapper.readValue(rs.getString("reward"), Life.class))
                 .build();
     }
 }

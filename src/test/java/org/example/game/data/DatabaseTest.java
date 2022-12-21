@@ -11,7 +11,7 @@ public class DatabaseTest {
     public void test_getWorld() {
         WorldAdapter worldAdapter = new WorldAdapter();
 
-        List<org.example.game.data.entities.World> worlds = worldAdapter.getWorlds();
+        List<org.example.game.data.entities.World> worlds = worldAdapter.list();
 
         for (World w: worlds) {
             System.out.println(w);

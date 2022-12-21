@@ -25,10 +25,10 @@ public class Mission {
         DONE
     }
 
-    String name;
-    Life reward;
+    @Getter String name;
+    @Getter Life reward;
 
-    Schedule schedule;
+    @Getter Schedule schedule;
 
     LocalDate scheduledAt;
     LocalDate dueAt;

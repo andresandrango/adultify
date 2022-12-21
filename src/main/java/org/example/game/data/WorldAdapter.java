@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorldAdapter {
+public class WorldAdapter implements Adapter<World> {
 
-    public World getWorld(String wUuid) {
+    @Override
+    public World get(String wUuid) {
 
         return Utils.execute("SELECT * FROM world where id = '" + wUuid + "'", rs -> {
             try {
@@ -21,17 +22,24 @@ public class WorldAdapter {
         });
     }
 
-    public World createWorld(String name) {
+    @Override
+    public World create(String name) {
         final String id = Utils.executeUpdate("INSERT INTO world (name) values ('"+ name + "')");
 
         if (id != null) {
-            return getWorld(id);
+            return get(id);
         } else {
             return null;
         }
     }
 
-    public boolean removeWorld(String wId) {
+    @Override
+    public World create(final World obj) {
+        return null;
+    }
+
+    @Override
+    public boolean delete(String wId) {
         return Utils.executeUpdateNoKeys(String.format("DELETE FROM world where id = '%s'", wId));
     }
 
@@ -43,7 +51,8 @@ public class WorldAdapter {
         return Utils.executeUpdateNoKeys(String.format("DELETE FROM world_citizen WHERE world='%s' and citizen='%s'", wId, cId));
     }
 
-    public List<World> getWorlds() {
+    @Override
+    public List<World> list() {
         List<World> worlds = new ArrayList<>();
         return Utils.execute("SELECT * FROM world", worlds, (rs, out) -> {
             try {

@@ -64,6 +64,20 @@ public class WorldAdapter implements Adapter<World> {
         });
     }
 
+    public List<World> listByCitizen(String cUuid) {
+        List<World> worlds = new ArrayList<>();
+        return Utils.execute("SELECT world.* FROM world " +
+                "JOIN world_citizen ON world.id = world_citizen.world " +
+                String.format("AND world_citizen.citizen = '%s'", cUuid), worlds, (rs, out) -> {
+            try {
+                out.add(deserializeWorld(rs));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+    }
+
     // TODO This query is executed per world; change this to be part of a particular
     // query that needs this data
     public List<Citizen> getWorldCitizens(String wUUID) {

@@ -65,6 +65,10 @@ public class Server {
             ctx.json(citizenAdapter.get(ctx.pathParam("id")));
         });
 
+        app.get("/citizens/{id}/worlds", ctx -> {
+            ctx.json(worldAdapter.listByCitizen(ctx.pathParam("id")));
+        });
+
         app.post("/citizens/create", ctx -> {
             ctx.json(citizenAdapter.create(ctx.formParam("name")));
         });

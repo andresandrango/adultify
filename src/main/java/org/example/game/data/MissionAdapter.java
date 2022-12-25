@@ -3,7 +3,6 @@ package org.example.game.data;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.game.data.entities.Mission;
-import org.example.game.data.entities.World;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,7 +15,7 @@ public class MissionAdapter implements Adapter<Mission> {
 
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
-    private static String jsonSerialize(
+    public static String jsonSerialize(
             Mission mission,
             Function<Mission, ?> fn) {
         try {
@@ -26,11 +25,16 @@ public class MissionAdapter implements Adapter<Mission> {
         }
     }
 
+    public static Mission jsonDeserialize(String s) throws IOException {
+        return objectMapper.readValue(s, Mission.class);
+    }
+
     private static final List<Map.Entry<String, Function<Mission, ?>>> MAPPING = new ArrayList<>() {{
         add(Map.entry("name", Mission::getName));
         add(Map.entry("state", Mission::getState));
         add(Map.entry("reward", (Mission mission) -> jsonSerialize(mission, Mission::getReward)));
         // TODO add schedule to data definition
+        add(Map.entry("owner", (Mission mission) -> mission.getOwner().getId()));
         add(Map.entry("schedule", (Mission mission) -> "{}"));
     }};
 
@@ -38,6 +42,18 @@ public class MissionAdapter implements Adapter<Mission> {
     public List<Mission> list() {
         List<Mission> missions = new ArrayList<>();
         return Utils.execute("SELECT * FROM mission", missions, (rs, out) -> {
+            try {
+                out.add(Utils.deserializeMission(rs));
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+    }
+
+    public List<Mission> listByOwner(String cId) {
+        List<Mission> missions = new ArrayList<>();
+        return Utils.execute(String.format("SELECT * FROM mission WHERE owner = '%s'", cId), missions, (rs, out) -> {
             try {
                 out.add(Utils.deserializeMission(rs));
             } catch (SQLException | IOException e) {

@@ -69,6 +69,10 @@ public class Server {
             ctx.json(worldAdapter.listByCitizen(ctx.pathParam("id")));
         });
 
+        app.get("/citizens/{id}/missions", ctx -> {
+           ctx.json(missionAdapter.listByOwner(ctx.pathParam("id")));
+        });
+
         app.post("/citizens/create", ctx -> {
             ctx.json(citizenAdapter.create(ctx.formParam("name")));
         });
@@ -91,18 +95,11 @@ public class Server {
         });
 
         app.post("/missions/create", ctx -> {
-            Life.LifeBuilder lifeBuilder = Life.builder();
-            if (ctx.formParam("energy") != null)  lifeBuilder.energy(Integer.parseInt(ctx.formParam("energy")));
-            if (ctx.formParam("time") != null)  lifeBuilder.time(Integer.parseInt(ctx.formParam("time")));
+            Mission mission = MissionAdapter.jsonDeserialize(ctx.body());
+            mission.setState(MissionState.CREATED);
 
-            Mission m = Mission.builder()
-                    .state(MissionState.CREATED)
-                    .name(ctx.formParam("name"))
-                    .reward(lifeBuilder.build())
-                    .build();
-
-            m = missionAdapter.create(m);
-            ctx.json(m);
+            mission = missionAdapter.create(mission);
+            ctx.json(mission);
         });
 
         app.start(7070);

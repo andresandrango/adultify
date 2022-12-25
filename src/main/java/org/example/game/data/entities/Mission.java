@@ -3,27 +3,38 @@ package org.example.game.data.entities;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 import org.example.game.Mission.MissionState;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
+@Jacksonized
 public class Mission {
 
-    @Getter String id;
+    @Getter @Setter
+    String id;
 
-    @Getter String name;
+    @Getter @Setter
+    String name;
 
-    @Getter MissionState state;
+    @Getter @Setter
+    MissionState state;
 
-    @Getter Citizen owner;
+    @Getter @Setter
+    Citizen owner;
 
-    @Getter Life reward;
+    @Getter @Setter
+    Life reward;
 
-    @Getter LocalDate scheduledAt;
+    @Getter @Setter
+    LocalDate scheduledAt;
 
-    @Getter LocalDate dueAt;
+    @Getter @Setter
+    LocalDate dueAt;
 
-    @Getter LocalDate completedAt;
+    @Getter @Setter
+    LocalDate completedAt;
 }

@@ -48,6 +48,18 @@ public class Mission {
     @Getter
     private MissionState state = MissionState.CREATED;
 
+    public Mission(org.example.game.data.entities.Mission data) {
+        name = data.getName();
+        state = data.getState();
+        if (data.getOwner() != null) {
+            owner = new Citizen(data.getOwner());
+        }
+        reward = new Life(data.getReward());
+        scheduledAt = data.getScheduledAt();
+        dueAt = data.getDueAt();
+        completedAt = data.getCompletedAt();
+    }
+
    public static class MissionBuilder {
        public MissionBuilder owner(Citizen owner) throws Exception {
            throw new Exception("use assignTo instead");

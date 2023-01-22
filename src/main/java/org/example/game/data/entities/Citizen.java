@@ -13,4 +13,6 @@ public class Citizen {
     @Getter String id;
 
     @Getter String name;
+
+    @Getter Life life;
 }

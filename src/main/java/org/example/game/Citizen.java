@@ -14,6 +14,8 @@ import java.util.List;
 @SuperBuilder
 public class Citizen {
 
+    @Getter String id;
+
     @Getter String name;
 
     @Default Life life = Life.builder()
@@ -25,6 +27,11 @@ public class Citizen {
 
     // Active missions; scheduled and in progress
     @Default List<Mission> missions = new ArrayList<>();
+
+    public Citizen(org.example.game.data.entities.Citizen data) {
+        name = data.getName();
+        life = new Life(data.getLife());
+    }
 
     public void completeMission(Mission mission) throws Exception {
         completeMission(mission, 1);

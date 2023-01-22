@@ -11,6 +11,11 @@ public class Life {
 
     @Getter private int time;   // express in hours
 
+    public Life(org.example.game.data.entities.Life data) {
+        energy = data.getEnergy();
+        time = data.getTime();
+    }
+
     public void addLife(Life life) {
         // Energy could be unbounded but time is bounded by exercise period
         // TODO figure out how to bound time or explain why it could be unbounded

@@ -1,10 +1,13 @@
 package org.example.game;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.example.game.data.WorldAdapter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Every world is unique as far as point system is concerned.
@@ -19,10 +22,16 @@ public class World {
 
     @Getter List<Citizen> citizens;
 
-    List<Mission> missionsCompleted;
-    List<Mission> nextMissions;
+    @Setter List<Mission> completedMissions;
+    @Setter List<Mission> unassignedMissions;
+    @Setter List<Mission> assignedMissions;
 
     List<MissionTemplate> missionTemplates;
+
+    public World(org.example.game.data.entities.World data) {
+        name = data.getName();
+        citizens = data.getCitizens().stream().map(Citizen::new).collect(Collectors.toList());
+    }
 
     public List<Mission> findLatestSuccessfulCompletedMission(String missionName, int n) {
         return List.of();
@@ -67,7 +76,7 @@ public class World {
 
         try {
             Mission nextMissionFromTemplate = template.createMission(this);
-            nextMissions.add(nextMissionFromTemplate);
+            unassignedMissions.add(nextMissionFromTemplate);
         } catch (Exception e) {
             // TODO handle this
             return false;

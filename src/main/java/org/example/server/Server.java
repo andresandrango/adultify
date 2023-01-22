@@ -94,6 +94,31 @@ public class Server {
             ctx.json(missionAdapter.get(ctx.pathParam("id")));
         });
 
+        app.post("/missions/{id}/complete", ctx -> {
+            // 1. see if there is a game engine up for this world!
+            // 1.1. Else, load on up from the database
+            // 2. simulate the completion
+
+            // Architecture decision: Given that the interactions with each world daily are very low e.g.
+            // one family will complete up to 20 chores per day max, we will always boot up the instance
+            // from cold (DB), the main advantage is keeping a stateless pool of app servers; If this is
+            // to change or too expensive somehow, we can explore keeping instances HOT (in memory) and
+            // adding a gateway layer to help route to the right app server (more of a stateful architecture)
+
+            Mission mission = MissionAdapter.jsonDeserialize(ctx.body());
+//            if (mission.getWorld()) {
+//                // use world fairness to attribute reward to citizen
+//
+//                var gameEngine = GameEngineFactory(mission.getWorld());
+//
+//                gameEngine.completeMission(
+//                )
+//
+//            } else {
+//                // only attribute reward to citizen with default fairness
+//            }
+        });
+
         app.post("/missions/create", ctx -> {
             Mission mission = MissionAdapter.jsonDeserialize(ctx.body());
             mission.setState(MissionState.CREATED);

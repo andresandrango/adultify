@@ -51,6 +51,20 @@ public class MissionAdapter implements Adapter<Mission> {
         });
     }
 
+    public List<Mission> listByWorld(String wId) {
+        List<Mission> missions = new ArrayList<>();
+        return Utils.execute("SELECT mission.* FROM mission " +
+                "JOIN world_mission ON mission.id = world_mission.mission " +
+                String.format("AND world_mission world = '%s'", wId), missions, (rs, out) -> {
+            try {
+                out.add(Utils.deserializeMission(rs));
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+    }
+
     public List<Mission> listByOwner(String cId) {
         List<Mission> missions = new ArrayList<>();
         return Utils.execute(String.format("SELECT * FROM mission WHERE owner = '%s'", cId), missions, (rs, out) -> {
